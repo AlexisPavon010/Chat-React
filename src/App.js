@@ -1,23 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react'
+import Login from './components/Login'
+import Chat from './components/Chat'
+import Register from './components/Register'
+import {  auth } from './firebase'
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+
+
+
+
+
 
 function App() {
+
+  const [user, setUser] = useState(false)
+  
+
+  auth.onAuthStateChanged( User => {
+    if (User) {
+      setUser(true)
+      console.log('logIn')
+    }else {
+      console.log('no Existe')
+    }
+  })
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      
+            { user ? <Chat /> : 
+        <Router>      
+          <Route path="/Register">
+            <Register />
+          </Route>
+
+          <Route path="/Login">
+            <Login />
+          </Route>
+        </Router>
+          }
+
+
     </div>
   );
 }
